@@ -54,7 +54,7 @@
       <nav class="nav nav-masthead justify-content-center float-md-end">
          <a class="nav-link active" aria-current="page" href="{{url_for('home', nome_usuario=nome_usuario)}}">PaginaInicial</a>
         <a class="nav-link" href="{{url_for('lista', nome_usuario=nome_usuario)}}">Lista</a>
-        <a class="nav-link" href="{{url_for('contato', nome_usuario=nome_usuario)}}">Contato</a>
+        <a class="nav-link" href="{{url_for('contato', nome_usuario=nome_usuario)}}">Sobre Hidden</a>
                   <a class="nav-link" href="{{url_for('login')}}">Sair</a>
 
       </nav>
@@ -70,19 +70,11 @@
         </div>
       {%- endfor %}
    </ol>
-      {% for pessoa in range(quantidade_pessoas_lista) %}
-        {% if pessoa == quantidade_pessoas_lista - 1 %}
-      <li>  Nome: {{lista[pessoa][0].nome}} {{lista[pessoa][0].email}} -> {{lista[pessoa - pessoa][0].nome }}</li>
 
-      {% else %}
-      <li > Nome: {{lista[pessoa][0].nome}} {{lista[pessoa][0].email}} -> {{lista[pessoa + 1][0].nome }} </li>
-        {% endif %}
-
-      {% endfor %}
       <hr>
     <ol class="list-group list-group-numbered">
       {% for pessoa in users %}
-        <li class="list-group-item"> Nome: {{pessoa[0].nome}} - Email: {{pessoa[0].email}} - Sugestão: {{pessoa[0].obs}}</li>
+        <li class="list-group-item"> Nome: {{pessoa.nome}} - Email: {{pessoa.email}} - Sugestão: {{pessoa.obs}}</li>
       {% endfor %}
     </ol>
 

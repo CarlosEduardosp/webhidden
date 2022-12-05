@@ -54,7 +54,7 @@
       <nav class="nav nav-masthead justify-content-center float-md-end">
          <a class="nav-link active" aria-current="page" href="{{url_for('home', nome_usuario=nome_usuario)}}">PaginaInicial</a>
         <a class="nav-link" href="{{url_for('lista', nome_usuario=nome_usuario)}}">Lista</a>
-        <a class="nav-link" href="{{url_for('home', nome_usuario=nome_usuario)}}">Contato</a>
+        <a class="nav-link" href="{{url_for('contato', nome_usuario=nome_usuario)}}">Sobre Hidden</a>
         <a class="nav-link" href="{{url_for('login')}}">Sair</a>
       </nav>
     </div>
@@ -62,13 +62,36 @@
 
   <main class="px-3">
     <hr>
+    <h4>HIDDEN</h4>
+          <h6>Sorteio Automático</h6>
+        {%- for mensagem in get_flashed_messages() %}
+     	<div class="alert alert-success">
+		{{mensagem}}
+       	</div>
+        {%- endfor %}
+<hr>
     <h3>Desenvolvedor Python</h3>
     <h2>Carlos Eduardo</h2>
     <hr>
     <h3>Desenvolvido com:</h3>
     <h2>Flask - Bootstrap 5 - SQLAlchemy </h2>
     <h2>email.message - smtplib - Random </h2>
+
     <hr>
+            <h4>Funcionamento:</h4>
+          <h5>HIDDEN - É uma aplicação que automatiza o sorteio de nomes, e e-mails.</h5>
+            <h5>Cadastre um nome para seu grupo de amigos, em seguida faça o login no sistema.</h5>
+            <h5>Adicione todos os nomes e e-mails desejados, e também as sugestões de presentes para cada pessoa.</h5>
+            <h5>Agora basta clicar no botão 'Sortear e Enviar', que o sistema irá realizar o sorteio e enviar automaticamente
+            os nomes sorteados para cada um individualmente, juntamente com as sugestões de cada pessoa.</h5>
+    <hr>
+      <form class="form-inline" action="{{url_for('sugestao', nome_usuario=nome_usuario)}}" method='POST'>
+
+      <h4>Tem Algo a Compartilhar Comigo:</h4>
+            <textarea class="form-control border-primary" name="sugestao" placeholder="Deixe aqui sua observação/Sugestão/Avaliação e será enviado diretamente para meu E-mail." ></textarea>
+      <br> <button type="submit"  class="btn btn-primary" required>Enviar</button>
+
+          <hr></form>
     <h3>Contatos:</h3>
     <a href="https://www.linkedin.com/in/carlos-eduardo-kadu-0a105040/">Perfil Linkedin</a>
     <a href="https://www.instagram.com/kadu_spadilha/">Perfil Instagram</a>

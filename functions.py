@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from app import db, user
+#from app import db, user
 import  random
 import smtplib
 import email.message
@@ -7,10 +7,12 @@ import email.message
 
 def validar_entrada(nome, email, banco):
     for pessoa in banco:
-        if nome == pessoa[0].nome:
+        if nome == pessoa.nome:
             return True
-        elif email == pessoa[0].email:
+        elif email == pessoa.email:
             return False
+        else:
+            return 'nada'
 
 
 def enviar_email(dados):
@@ -35,5 +37,21 @@ def enviar_email(dados):
     s.login(msg['From'], password)
     s.sendmail(msg["from"], [msg["to"]], msg.as_string().encode("utf-8"))
 
+def enviar_sugestao(sugestao):
+    corpo_email = f"<p>{sugestao}</p>"
+
+    msg = email.message.Message()
+    msg['Subject'] = "Hidden - Alguém te enviou uma Sugestão.".upper()
+    msg['From'] = "tec.mundo.py@gmail.com"
+    msg['To'] = 'carlos.spadilha@yahoo.com.br'
+    password = 'jakhonuthvdvrkvw'
+    msg.add_header('Content-Type', 'text/html')
+    msg.set_payload(corpo_email)
+
+    s = smtplib.SMTP('smtp.gmail.com: 587')
+    s.starttls()
+
+    s.login(msg['From'], password)
+    s.sendmail(msg["from"], [msg["to"]], msg.as_string().encode("utf-8"))
 
 

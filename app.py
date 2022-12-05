@@ -20,6 +20,12 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 # initialize the app with the extension
 db.init_app(app)
 
+def chave_estrangeira(nome_usuario):
+    usuarios = db.session.execute(db.select(usuario)).all()
+    for pessoas in usuarios:
+        if nome_usuario == pessoas[0].nome:
+            chave = pessoas[0].id
+            return chave
 
 def consultar_db():
     users = db.session.execute(db.select(user)).all()
@@ -27,14 +33,16 @@ def consultar_db():
 
 class user(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String, unique=True, nullable=False)
-    email = db.Column(db.String, unique=True, nullable=False)
+    chave = db.Column(db.Integer, unique=False, nullable=False)
+    nome = db.Column(db.String, unique=False, nullable=False)
+    email = db.Column(db.String, unique=False, nullable=False)
     obs = db.Column(db.String, unique=False, nullable=False)
 
-    def __init__(self, nome, email, obs):
+    def __init__(self, nome, email, obs, chave):
         self.nome = nome
         self.email = email
         self.obs = obs
+        self.chave = chave
 
 class usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -58,10 +66,16 @@ def home(nome_usuario):
         if not obs:
             obs = 'Nenhuma sugestão foi digitada.'
 
+
+        chave =chave_estrangeira(nome_usuario)
+
+
         #consulta ao banco de dados
         users = consultar_db()
+        banco = user.query.filter_by(chave=chave).all()
+
         # consulta se o nome já existe no banco de dados
-        resp = functions.validar_entrada(nome, email, users)
+        resp = functions.validar_entrada(nome, email, banco)
 
         # resp True para nome que já consta no bd e resp False para email que já consta no bd.
         if resp == True:
@@ -74,7 +88,8 @@ def home(nome_usuario):
                     flash("Preencha todos os campos do formulário!", "error")
                 else:
                     # adicionando pessoas no banco de dados.
-                    pessoa = user(nome, email, obs)
+
+                    pessoa = user(nome, email, obs, chave)
                     db.session.add(pessoa)
                     db.session.commit()
                     flash(f"{nome.title()} já foi adicionado(a) a lista.")
@@ -84,18 +99,34 @@ def home(nome_usuario):
 
 @app.route('/lista<nome_usuario>', methods=['GET','POST'])
 def lista(nome_usuario):
+    chave = chave_estrangeira(nome_usuario)
+
+
     users = consultar_db()
+    lista = []
+    for pessoas in users:
+        if chave == pessoas[0].chave:
+            lista.append(pessoas[0].nome)
+            lista.append(pessoas[0].email)
+            lista.append(pessoas[0].obs)
 
     # corpo do email para ser enviado para todos da lista.
     if request.method == 'POST':
         corpo_email = request.form.get('corpo_email')
 
-    return render_template('lista.html', users=users, nome_usuario=nome_usuario)
+
+
+    return render_template('lista.html', users=users, nome_usuario=nome_usuario, lista=lista, chave=chave)
 
 
 @app.route('/sorteio/<nome_usuario>')
 def sortear(nome_usuario):
     users = consultar_db()
+
+    chave = chave_estrangeira(nome_usuario)
+
+    users = user.query.filter_by(chave=chave).all()
+
     lista = users
 
     random.shuffle(lista)
@@ -105,10 +136,10 @@ def sortear(nome_usuario):
     dados = []
     for pessoa in range(quantidade_pessoas_lista):
         if pessoa == quantidade_pessoas_lista - 1:
-            nome = lista[pessoa][0].nome
-            email = lista[pessoa][0].email
-            obs = lista[pessoa - pessoa][0].obs
-            nome_sorteado = lista[pessoa - pessoa][0].nome
+            nome = lista[pessoa].nome
+            email = lista[pessoa].email
+            obs = lista[pessoa - pessoa].obs
+            nome_sorteado = lista[pessoa - pessoa].nome
             dados.append(nome)
             dados.append(email)
             dados.append(obs)
@@ -116,10 +147,10 @@ def sortear(nome_usuario):
             functions.enviar_email(dados)
 
         else:
-            nome = lista[pessoa][0].nome
-            email = lista[pessoa][0].email
-            obs = lista[pessoa + 1][0].obs
-            nome_sorteado = lista[pessoa + 1][0].nome
+            nome = lista[pessoa].nome
+            email = lista[pessoa].email
+            obs = lista[pessoa + 1].obs
+            nome_sorteado = lista[pessoa + 1].nome
             dados.append(nome)
             dados.append(email)
             dados.append(obs)
@@ -216,7 +247,16 @@ def login():
 
 @app.route('/contato/<nome_usuario>')
 def contato(nome_usuario):
-    return render_template('contato.html', nome_usuario=nome_usuario)
+   return render_template('contato.html', nome_usuario=nome_usuario)
+
+@app.route('/sugestao/<nome_usuario>', methods=['POST'])
+def sugestao(nome_usuario):
+    if request.method == 'POST':
+        sugestao = request.form.get('sugestao')
+        if sugestao:
+            functions.enviar_sugestao(sugestao)
+            flash('Sua Mensagem Foi Enviada com Sucesso!! Muito Obrigado!!')
+        return redirect(url_for('contato', nome_usuario=nome_usuario))
 
 if __name__ == '__main__':
     app.run(debug=True)

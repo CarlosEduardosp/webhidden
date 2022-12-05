@@ -54,7 +54,7 @@
       <nav class="nav nav-masthead justify-content-center float-md-end">
         <a class="nav-link active" aria-current="page" href="{{url_for('home', nome_usuario=nome_usuario)}}">PaginaInicial</a>
         <a class="nav-link" href="{{url_for('lista', nome_usuario=nome_usuario)}}">Lista</a>
-        <a class="nav-link" href="{{url_for('contato', nome_usuario=nome_usuario)}}">Contato</a>
+        <a class="nav-link" href="{{url_for('contato', nome_usuario=nome_usuario)}}">Sobre Hidden</a>
                   <a class="nav-link" href="{{url_for('login')}}">Sair</a>
 
       </nav>
@@ -68,11 +68,11 @@
 
     <ol class="list-group list-group-numbered">
       {% for pessoa in users %}
-
+            {% if chave == pessoa[0].chave %}
         <li class="list-group-item"> Nome: {{pessoa[0].nome}} - Email: {{pessoa[0].email}} - Sugestão: {{pessoa[0].obs}}
         <a  href="{{url_for('editar', id=pessoa[0].id, nome_usuario=nome_usuario)}}" class="btn btn-outline-success btn-xs">Editar</a>
         <a href="{{url_for('deletar', id=pessoa[0].id, nome_usuario=nome_usuario)}}" class="btn btn-outline-danger btn-xs" onclick="return confirm('Deseja realmente excluir {{pessoa[0].nome}}?')">Deletar</a>
-
+            {% endif %}
         </li>
       {% endfor %}
     </ol>
@@ -87,7 +87,6 @@
     </div>
 
   </main>
-
  <footer class="mt-auto text-white-50">
     <p>Hidden - by Carlos Eduardo</p>
   </footer>
