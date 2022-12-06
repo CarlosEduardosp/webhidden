@@ -38,6 +38,8 @@ def enviar_email(dados):
     s.login(msg['From'], password)
     s.sendmail(msg["from"], [msg["to"]], msg.as_string().encode("utf-8"))
 
+
+# função para o envio de emails de sugestão
 def enviar_sugestao(sugestao):
     corpo_email = f"<p>{sugestao}</p>"
 
