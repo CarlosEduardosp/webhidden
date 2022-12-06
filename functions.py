@@ -1,5 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-#from app import db, user
 import  random
 import smtplib
 import email.message
