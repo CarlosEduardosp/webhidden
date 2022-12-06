@@ -4,6 +4,7 @@ import smtplib
 import email.message
 
 
+
 def validar_entrada(nome, email, banco):
     for pessoa in banco:
         if nome == pessoa.nome:
@@ -14,6 +15,7 @@ def validar_entrada(nome, email, banco):
             return 'nada'
 
 
+#função para envio de emails sorteados.
 def enviar_email(dados):
     nome = f'{dados[3]}'.upper()
 
