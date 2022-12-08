@@ -253,11 +253,15 @@ def contato(nome_usuario):
 
 @app.route('/sugestao/<nome_usuario>', methods=['POST'])
 def sugestao(nome_usuario):
+
     if request.method == 'POST':
         sugestao = request.form.get('sugestao')
-        if sugestao:
-            functions.enviar_sugestao(sugestao)
-            flash('Sua Mensagem Foi Enviada com Sucesso!! Muito Obrigado!!')
+        nome = nome_usuario
+
+
+        if sugestao and nome:
+            functions.enviar_sugestao(sugestao, nome)
+            flash(f'{nome}, Sua Mensagem Foi Enviada com Sucesso!! Muito Obrigado!!')
         return redirect(url_for('contato', nome_usuario=nome_usuario))
 
 if __name__ == '__main__':

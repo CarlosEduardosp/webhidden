@@ -86,9 +86,11 @@
             os nomes sorteados para cada um individualmente, juntamente com as sugestões de cada pessoa.</h5>
     <hr>
       <form class="form-inline" action="{{url_for('sugestao', nome_usuario=nome_usuario)}}" method='POST'>
-
+        <br>
       <h4>Tem Algo a Compartilhar Comigo:</h4>
-            <textarea class="form-control border-primary" name="sugestao" placeholder="Deixe aqui sua observação/Sugestão/Avaliação e será enviado diretamente para meu E-mail." ></textarea>
+          <br>
+          Deixe aqui o que achou do Hidden:<textarea class="form-control border-primary" name="sugestao" placeholder="Deixe aqui sua observação/Sugestão/Avaliação e será enviado diretamente para meu E-mail." ></textarea>
+
       <br> <button type="submit"  class="btn btn-primary" required>Enviar</button>
 
           <hr></form>

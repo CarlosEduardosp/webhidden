@@ -40,11 +40,11 @@ def enviar_email(dados):
 
 
 # função para o envio de emails de sugestão
-def enviar_sugestao(sugestao):
-    corpo_email = f"<p>{sugestao}</p>"
+def enviar_sugestao(sugestao, nome):
+    corpo_email = f"<p>{sugestao}</p><br>Att: {nome}"
 
     msg = email.message.Message()
-    msg['Subject'] = "Hidden - Alguém te enviou uma Sugestão.".upper()
+    msg['Subject'] = f"Hidden - {nome} te enviou uma Mensagem.".upper()
     msg['From'] = "tec.mundo.py@gmail.com"
     msg['To'] = 'carlos.spadilha@yahoo.com.br'
     password = 'jakhonuthvdvrkvw'
