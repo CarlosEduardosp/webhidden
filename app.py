@@ -23,7 +23,7 @@ db.init_app(app)
 def chave_estrangeira(nome_usuario):
     usuarios = db.session.execute(db.select(usuario)).all()
     for pessoas in usuarios:
-        if nome_usuario == pessoas[0].nome:
+        if nome_usuario == pessoas[0].apelido:
             chave = pessoas[0].id
             return chave
 
@@ -46,14 +46,15 @@ class user(db.Model):
 
 class usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String, unique=False, nullable=False)
+    email = db.Column(db.String, unique=False, nullable=False)
     senha = db.Column(db.String, unique=False, nullable=False)
+    apelido = db.Column(db.String, unique=False, nullable=False)
 
 
-    def __init__(self, nome, senha):
-        self.nome = nome
+    def __init__(self, email, senha, apelido):
+        self.email = email
         self.senha = senha
-
+        self.apelido = apelido
 
 @app.route('/home/<nome_usuario>', methods=['GET', 'POST'])
 def home(nome_usuario):
@@ -97,7 +98,7 @@ def home(nome_usuario):
     return render_template('home.html', nome_usuario=nome_usuario)
 
 
-@app.route('/lista<nome_usuario>', methods=['GET','POST'])
+@app.route('/lista/<nome_usuario>', methods=['GET','POST'])
 def lista(nome_usuario):
     chave = chave_estrangeira(nome_usuario)
 
@@ -190,13 +191,14 @@ def editar(id,nome_usuario):
 def cadastrar():
     cont = 0
     if request.method == 'POST':
-        nome = request.form.get('nome').title()
+        email = request.form.get('email')
         senha = request.form.get('password')
+        apelido = request.form.get('apelido').title()
         usuarios = db.session.execute(db.select(usuario)).all()
 
-    if nome and senha:
+    if email and senha:
         for pessoas in usuarios:
-            if nome == pessoas[0].nome:
+            if email == pessoas[0].email:
                 cont = 1
                 break
             else:
@@ -206,18 +208,18 @@ def cadastrar():
         if cont == 1:
             flash('Padrão já existente, favor digite outro')
         elif cont == 0:
-            pessoa = usuario(nome, senha)
+            pessoa = usuario(email, senha, apelido)
             db.session.add(pessoa)
             db.session.commit()
-            mensagem = f'{nome}, Foi Cadastrado com Sucesso.'
+            mensagem = f'{email}, Foi Cadastrado com Sucesso.'
             flash(mensagem)
 
 
-    elif nome and not senha:
+    elif email and not senha:
         mensagem = 'Por Favor Digite o Campo: SENHA'
         flash(mensagem)
 
-    elif senha and not nome:
+    elif senha and not email:
         mensagem = 'Por Favor Digite o Campo: NOME'
         flash(mensagem)
 
@@ -226,19 +228,19 @@ def cadastrar():
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    nome = None
+    email = None
     senha = None
     if request.method == 'POST':
-        nome = request.form.get('nome').title()
+        email = request.form.get('email')
         senha = request.form.get('password')
 
     usuarios = db.session.execute(db.select(usuario)).all()
     mensagem = ''
     for pessoa in usuarios:
-        if nome:
-            if nome == pessoa[0].nome and senha == pessoa[0].senha:
-                return redirect(url_for('home', nome_usuario=nome))
-            elif nome != pessoa[0].nome or senha != pessoa[0].senha:
+        if email:
+            if email == pessoa[0].email and senha == pessoa[0].senha:
+                return redirect(url_for('home', nome_usuario=pessoa[0].apelido))
+            elif email != pessoa[0].email or senha != pessoa[0].senha:
                 mensagem = 'Usuário Inválido!! Ou Senha Incorreta!! Tente Outra Vez'
     flash(mensagem)
 

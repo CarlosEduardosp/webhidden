@@ -80,7 +80,7 @@
           <form class="form-inline" action="{{url_for('login')}}" method='POST'>
             <div class="form-group mx-sm-3 mb-2">
 
-            Nome:  <input type="text" class="form-control" name="nome" placeholder="Digite o nome cadastrado.">
+            Email:  <input type="text" class="form-control" name="email" placeholder="Digite o Email Cadastrado.">
             <br>
 
             Senha:<input type="password" class="form-control" name="password" placeholder="Digite sua senha">
@@ -93,11 +93,13 @@
       </div>
       <div class="col-md-6">
         <div class="h-100 p-5 bg-dark text-white border rounded-3">
-          <h2>Cadastrar Grupo de Amigos</h2>
+          <h2>Cadastrar</h2>
          <form class="form-inline" action="{{url_for('cadastrar')}}" method='POST'>
             <div class="form-group mx-sm-3 mb-2">
 
-            Nome:  <input type="text" class="form-control" name="nome" placeholder="Digite aqui um nome para seu novo grupo de amigos.">
+            Email:  <input type="text" class="form-control" name="email" placeholder="Digite aqui um Email para Cadastrar.">
+            <br>
+            Apelido:  <input type="text" class="form-control" name="apelido" placeholder="Digite um Apelido">
             <br>
             Senha:<input type="password" class="form-control" name="password" placeholder="Digite uma senha">
             <br> <button type="submit"  class="btn btn-primary" required>Cadastrar</button>
